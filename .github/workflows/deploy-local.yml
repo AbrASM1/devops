@@ -1,0 +1,19 @@
+name: CD 2 - Deploiement Local
+
+on:
+  workflow_run:
+    workflows: ["CI - Vérification HTML"]
+    types:
+      - completed
+
+jobs:
+  deploy-local:
+    runs-on: [self-hosted, linux, x64]
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Récupération du code source
+        uses: actions/checkout@v4
+
+      - name: Déploiement sur Nginx local
+        run: cp index.html /var/www/html/index.html
